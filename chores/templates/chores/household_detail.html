@@ -1,0 +1,29 @@
+{% extends "chores/_base.html" %}
+{% block title %}{{ household.name }}{% endblock %}
+{% block content %}
+    <h1>{{ household.name }}</h1>
+
+    <h2>People</h2>
+    <ul>
+        {% for person in people %}
+        <li>
+            {{ person.name }}
+            <form method="post" action="{% url 'person_delete' person.id %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit">Remove</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>No people yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add person</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Person name" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <p><a href="{% url 'household_list' %}">Back to households</a></p>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "chores/_base.html" %}
+{% block title %}Chores{% endblock %}
+{% block content %}
+    <h1>Chores</h1>
+    <ul>
+        {% for chore in chores %}
+        <li>
+            <a href="{% url 'chore_detail' chore.id %}">{{ chore.name }}</a>
+            ({{ chore.household.name }})
+        </li>
+        {% empty %}
+        <li>No chores yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add chore</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Chore name" required>
+        <select name="household" required>
+            <option value="" disabled selected>Select household</option>
+            {% for household in households %}
+            <option value="{{ household.id }}">{{ household.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "chores/_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h1>Current Chore Assignments</h1>
+    {% if assignments %}
+    <table border="1" cellpadding="6" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Household</th>
+                <th>Chore</th>
+                <th>Assigned to</th>
+                <th>Week of</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.chore.household.name }}</td>
+                <td>{{ assignment.chore.name }}</td>
+                <td>{{ assignment.person.name }}</td>
+                <td>{{ assignment.period_start }}</td>
+                <td>{{ assignment.get_status_display }}</td>
+                <td>
+                    {% if assignment.status != "done" %}
+                    <form method="post" action="{% url 'mark_done' assignment.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Mark done</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No chore assignments yet.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "chores/_base.html" %}
+{% block title %}Households{% endblock %}
+{% block content %}
+    <h1>Households</h1>
+    <ul>
+        {% for household in households %}
+        <li><a href="{% url 'household_detail' household.id %}">{{ household.name }}</a></li>
+        {% empty %}
+        <li>No households yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add household</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Household name" required>
+        <button type="submit">Add</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "chores/_base.html" %}
+{% block title %}{{ chore.name }}{% endblock %}
+{% block content %}
+    <h1>{{ chore.name }} ({{ chore.household.name }})</h1>
+
+    <h2>Rotation order</h2>
+    <ol>
+        {% for rotation in rotations %}
+        <li>
+            {{ rotation.person.name }}
+            <form method="post" action="{% url 'rotation_delete' rotation.id %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit">Remove</button>
+            </form>
+        </li>
+        {% empty %}
+        <li>No one in the rotation yet.</li>
+        {% endfor %}
+    </ol>
+
+    <h2>Add to rotation</h2>
+    {% if eligible_people %}
+    <form method="post">
+        {% csrf_token %}
+        <select name="person" required>
+            {% for person in eligible_people %}
+            <option value="{{ person.id }}">{{ person.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add</button>
+    </form>
+    {% else %}
+    <p>Everyone in this household is already in the rotation.</p>
+    {% endif %}
+
+    <h2>Danger zone</h2>
+    <form method="post" action="{% url 'chore_delete' chore.id %}"
+          onsubmit="return confirm('Delete this chore?');">
+        {% csrf_token %}
+        <button type="submit">Delete chore</button>
+    </form>
+
+    <p><a href="{% url 'chore_list' %}">Back to chores</a></p>
+{% endblock %}
